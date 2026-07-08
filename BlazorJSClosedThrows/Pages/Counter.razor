@@ -1,0 +1,61 @@
+﻿@page "/counter"
+@using SpawnDev.BlazorJS;
+@using SpawnDev.BlazorJS.JSObjects;
+@inject BlazorJSRuntime JS;
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="LoginProxyAsync">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    public async Task LoginAsync()
+    {
+        var url = "https://www.googleapis.com/auth/youtube";
+
+        var window = new Window();
+        var popup = window.Open(url, "Google Auth", "height=800,width=1200");
+        JS.Set("_popup", popup);
+        if (popup is not null)
+        {
+            var tmpObject = JS.New<JSObject>("Object");
+            tmpObject.JSRef!.Set("popup", popup);
+            popup.Focus();
+            while (!tmpObject.JSRef!.Get<bool>("popup.closed"))
+                await Task.Delay(1000);
+            Log($"GoogleAuthService.LoginAsync(): popup was closed");
+        }
+        else
+        {
+            Log($"GoogleAuthService.LoginAsync(): popup was null");
+        }
+    }
+    public async Task LoginProxyAsync()
+    {
+        var url = "https://www.googleapis.com/auth/youtube";
+
+        var window = new Window();
+        var popup = window.Open(url, "Google Auth", "height=800,width=1200");
+
+        JS.Set("_popup", popup);
+        if (popup is not null)
+        {
+            using var safeWin = new CrossOriginWindow(popup);
+            safeWin.Focus();
+            while (!safeWin.Closed)
+                await Task.Delay(1000);
+            Log($"GoogleAuthService.LoginAsync(): popup was closed");
+        }
+        else
+        {
+            Log($"GoogleAuthService.LoginAsync(): popup was null");
+        }
+    }
+    void Log(params object?[] msg) => JS.Log(msg);
+    
+}
