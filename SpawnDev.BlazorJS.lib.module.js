@@ -5,7 +5,6 @@
     // This patch simply allows the revive to work without crashing
     const originalHasOwnPropertyPrototype = Object.prototype.hasOwnProperty;
     Object.prototype.hasOwnProperty = function (prop) {
-        console.log('hasOwnPropertyPrototype called', prop);
         try {
             // Attempt the normal engine execution
             return originalHasOwnPropertyPrototype.apply(this, arguments);
@@ -13,7 +12,6 @@
             // Catch DOMException / SecurityError (e.g., cross-origin window access)
             if (error instanceof DOMException || error.name === 'SecurityError') {
                 // Return false so Blazor treats it as a non-existent property
-                console.log('hasOwnPropertyPrototype handled', prop);
                 return false;
             }
             // Re-throw genuine, unrelated engine errors
