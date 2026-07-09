@@ -33,6 +33,9 @@
 
         if (popup is not null)
         {
+            // this is here to make sure the window is cross-orign resitricted after the wait to make sure the test uses a cross-origin window
+            await Task.Delay(2000);
+
             // Close the popup in 5 seconds to automate the test
             _ = Async.RunAsync(async () =>
             {
@@ -44,6 +47,17 @@
                 catch { }
             });
 
+            // Calls Focus() on the popup and logs if it fails
+            try
+            {
+                popup.Focus();
+            }
+            catch (Exception ex)
+            {
+                Log($"OpenCrossOriginWindow(): Focus() access exception: {ex.ToString()}");
+            }
+
+            // wait for the window to close
             try
             {
                 while (!popup.Closed)
