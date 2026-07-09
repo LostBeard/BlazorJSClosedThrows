@@ -48,16 +48,16 @@
             {
                 while (!popup.Closed)
                     await Task.Delay(1000);
-                Log($"WithoutCrossOriginWindow2(): popup was closed");
+                Log($"OpenCrossOriginWindow(): popup was closed");
             }
             catch (Exception ex)
             {
-                Log($"WithoutCrossOriginWindow2(): popup closed access exception: {ex.ToString()}");
+                Log($"OpenCrossOriginWindow(): popup closed access exception: {ex.ToString()}");
             }
         }
         else
         {
-            Log($"WithoutCrossOriginWindow2(): popup was null");
+            Log($"OpenCrossOriginWindow(): popup was null");
         }
 
         _busy = false;
